@@ -1,5 +1,6 @@
 <?php
 use App\Post;
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +131,21 @@ Route::get('/forcedelete', function () {
     Post::withTrashed()->where('is_admin', 0)->forceDelete();
 });
 
+Route::get('/user/{id}/post', function ($id) {
+   return User::find($id)->post->title;
+});
+
+Route::get('/post/{id}/user', function ($id) {
+    return Post::find($id)->user->name;
+});
+
+Route::get('/posts', function () {
+    $user = User::find(1);
+
+    foreach ($user->posts as $post) {
+        echo $post->title." <br>";
+    }
+});
 
 //Route::get('/post/{id}', 'PostsController@index');
 
