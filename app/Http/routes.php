@@ -33,6 +33,26 @@ Route::get('/', function () {
 //    return "This url is ".$url;
 //}));
 
+Route::get('/insert', function() {
+    DB::insert('INSERT INTO posts (title, body) VALUES (?, ?)', ['PHP with Laravel', 'Laravel is the best thing that happened to PHP']);
+});
+
+Route::get('/read', function () {
+   $results = DB::select('SELECT * FROM posts WHERE id = ?', [1]);
+   foreach ($results AS $result) {
+       return $result->title."<br>";
+   }
+});
+
+Route::get('/update', function () {
+   $updated = DB::update('UPDATE posts SET title="Update title" WHERE id=?', [1]);
+   return $updated;
+});
+
+Route::get('/delete', function () {
+    DB::delete('DELETE FROM posts WHERE id=?', [1]);
+});
+
 //Route::get('/post/{id}', 'PostsController@index');
 
 //Route::resource('posts', 'PostsController');
