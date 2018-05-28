@@ -15,20 +15,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/contact', function () {
-    return "hi about page";
-});
+//Route::get('/contact', function () {
+//    return "hi about page";
+//});
+//
+//Route::get('/contact', function () {
+//    return "hi I am contact";
+//});
+//
+//Route::get('/post/{id}/{name}', function ($id, $name) {
+//    return "This is post number ".$id." and name is ".$name;
+//});
+//
+//Route::get('/admin/posts/example', array('as' => 'admin.home', function () {
+//    $url = route('admin.home');
+//
+//    return "This url is ".$url;
+//}));
 
-Route::get('/contact', function () {
-    return "hi I am contact";
-});
+//Route::get('/post/{id}', 'PostsController@index');
 
-Route::get('/post/{id}/{name}', function ($id, $name) {
-    return "This is post number ".$id." and name is ".$name;
-});
-
-Route::get('/admin/posts/example', array('as' => 'admin.home', function () {
-    $url = route('admin.home');
-
-    return "This url is ".$url;
-}));
+Route::resource('posts', 'PostsController');
