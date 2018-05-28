@@ -1,4 +1,5 @@
 <?php
+use App\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,25 +34,102 @@ Route::get('/', function () {
 //    return "This url is ".$url;
 //}));
 
-Route::get('/insert', function() {
-    DB::insert('INSERT INTO posts (title, body) VALUES (?, ?)', ['PHP with Laravel', 'Laravel is the best thing that happened to PHP']);
-});
+//Route::get('/insert', function() {
+//    DB::insert('INSERT INTO posts (title, body) VALUES (?, ?)', ['PHP with Laravel', 'Laravel is the best thing that happened to PHP']);
+//});
+
+//Route::get('/read', function () {
+//   $results = DB::select('SELECT * FROM posts WHERE id = ?', [1]);
+//   foreach ($results AS $result) {
+//       return $result->title."<br>";
+//   }
+//});
+//
+//Route::get('/update', function () {
+//   $updated = DB::update('UPDATE posts SET title="Update title" WHERE id=?', [1]);
+//   return $updated;
+//});
+//
+//Route::get('/delete', function () {
+//    DB::delete('DELETE FROM posts WHERE id=?', [1]);
+//});
 
 Route::get('/read', function () {
-   $results = DB::select('SELECT * FROM posts WHERE id = ?', [1]);
-   foreach ($results AS $result) {
-       return $result->title."<br>";
-   }
+    $posts = Post::all();
+    foreach ($posts as  $post) {
+        return $post->title;
+    }
+});
+
+Route::get('/find', function () {
+    $post = Post::find(2);
+    return $post->title;
+});
+
+Route::get('/findwhere', function () {
+    $post = Post::where('id', 2)->orderBy('id', 'desc')->take(1)->get();
+    return $post;
+});
+
+Route::get('/findmore', function () {
+    $posts = Post::findOrFail(4);
+    return$posts;
+});
+
+Route::get('/basicinsert', function () {
+    $post = new Post;
+    $post->title    = "new ORM title";
+    $post->body     = 'WOW eloquent is really cool, look at this content';
+    $post->save();
+});
+
+Route::get('/basicinsert2', function () {
+    $post = Post::find(2);
+    $post->title    = "new ORM title2";
+    $post->body     = 'WOW eloquent is2 really cool, look at this content';
+    $post->save();
+});
+
+Route::get('/create', function () {
+   Post::create(['title' => 'the create method', 'body' => 'safa']);
 });
 
 Route::get('/update', function () {
-   $updated = DB::update('UPDATE posts SET title="Update title" WHERE id=?', [1]);
-   return $updated;
+    Post::where('id', 2)->where('is_admin', 0)->update(['title' => 'NEW PHP TITLE', 'body' => 'I am the boss']);
 });
 
 Route::get('/delete', function () {
-    DB::delete('DELETE FROM posts WHERE id=?', [1]);
+    $post = Post::find(2);
+    $post->delete();
 });
+
+Route::get('/delete2', function () {
+    Post::destroy([4,5]);
+    Post::where('is_admin', 0)->delete();
+});
+
+Route::get('/softdelete', function () {
+    Post::find(3)->delete();
+});
+
+Route::get('/readsoftdelete', function () {
+//    $post = Post::find(3);
+//    return $post;
+    $post = Post::withTrashed()->where('id', 3)->get();
+    return $post;
+
+//    $post = Post::onlyTrashed()->where('id', 3)->get();
+//    return $post;
+});
+
+Route::get('/restore', function () {
+    Post::withTrashed()->where('is_admin', 0)->restore();
+});
+
+Route::get('/forcedelete', function () {
+    Post::withTrashed()->where('is_admin', 0)->forceDelete();
+});
+
 
 //Route::get('/post/{id}', 'PostsController@index');
 
